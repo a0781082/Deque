@@ -14,6 +14,11 @@ var serverResponse;
 var startIndex = 0;
 var searchString;
 var prevSearchString
+var table
+var theadRow
+var tbody
+var navigation
+var paginationConfig
 
 window.onload = function () {
   var prevButtonElement = document.getElementById("prev");
@@ -38,7 +43,7 @@ function nextClick() {
   changePage("next");
 }
 
-async function result() {
+async function queryBooksAPI() {
   $("#bookTable").replaceWith(divClone);
   searchString = document.getElementById("txtInput").value;
   
@@ -61,14 +66,12 @@ async function result() {
     startIndex = 0;
   }
   
-  apiUri = `https://www.googleapis.com/books/v1/volumes?q={${searchString}}&maxResults=40&startIndex=${startIndex}`;
-  apiUrl = encodeURI(apiUri);
-  console.log("REST Request:" + apiUri);
+  var apiUri = `https://www.googleapis.com/books/v1/volumes?q={${searchString}}&maxResults=40&startIndex=${startIndex}`;
+  var apiUrl = encodeURI(apiUri);
   var t1 = Date.now();
   var t2;
   const response = await fetch(apiUrl);
   const bookList = await response.json();
-  console.log("Response: " + JSON.stringify(bookList));
   t2 = Date.now();
   var rt = t2 - t1;
   var serverResponseField = document.getElementById("responseTime");
@@ -176,11 +179,6 @@ async function changePage(direction) {
   let currentRecordStart = parseInt(table.dataset.recordStart);
   let currentRecordEnd = parseInt(table.dataset.recordEnd);
 
-  console.log(
-    "startIndex: " + startIndex,
-    "currentRecordStart: " + currentRecordStart,
-    "currentRecordEnd: " + currentRecordEnd
-  );
   if (direction === "next") {
     if (currentRecordEnd + 1 > myDataArray.length) {
       return;
@@ -193,7 +191,7 @@ async function changePage(direction) {
     if (newEnd > myDataArray.length) {
       startIndex += 41;
       waiting = true;
-      result();
+      queryBooksAPI();
       waiting = false;
       return;
     }
@@ -209,7 +207,7 @@ async function changePage(direction) {
     if (currentRecordStart == 0 && startIndex > 0) {
       startIndex -= 41;
       waiting = true;
-      await result();
+      await queryBooksAPI();
       waiting = false;
       newEnd = myDataArray.length - 1;
       newStart = newEnd - paginationConfig.resultsPerPage + 1;
@@ -261,7 +259,7 @@ function hideColumns() {
 function addRowHandlers() {
   var table = document.getElementById("bookTable");
   var rows = table.getElementsByTagName("tr");
-  for (i = 0; i < rows.length; i++) {
+  for (var i = 0; i < rows.length; i++) {
     var currentRow = table.rows[i];
     var createClickHandler = function (row) {
       return function () {
