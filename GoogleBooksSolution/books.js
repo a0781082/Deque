@@ -1,3 +1,4 @@
+//initialise global variables
 var divClone;
 var myDataArray;
 var authorsArray;
@@ -20,6 +21,10 @@ var tbody
 var navigation
 var paginationConfig
 
+//run window onload actions:
+//- creat event listeners for the prev and next buttons
+//- create clone of book table so that it is easy to reinitialise table
+//  in the event of a change of search criteria
 window.onload = function () {
   var prevButtonElement = document.getElementById("prev");
   var nextButtonElement = document.getElementById("next");
@@ -35,26 +40,32 @@ window.onload = function () {
   divClone = $("#bookTable").clone();
 };
 
+// catch prevClick and invoke change page functionaility
 function prevClick() {
   changePage("prev");
 }
 
+// catch nextClick and invoke change page functionaility
 function nextClick() {
   changePage("next");
 }
 
+//function to call the google books API
 async function queryBooksAPI() {
+  //clear the book table so it is ready for new content
   $("#bookTable").replaceWith(divClone);
+
+  //get the new search criteria from the age
   searchString = document.getElementById("txtInput").value;
   
+  //if the search criteria has changed then reinitialise the 
+  //working storage to ensure clean execution
   if (searchString != prevSearchString) {
     // initialise the metadata
     prevSearchString = searchString;
     itemCount = 0;
-    /*myDataArray = [];*/
     authorsArray = [];
     pubDatesArray = [];
-    //th = null;
     itemCount = 0;
     mostCommonAuthor = null;
     mostCommonAuthorCount = 0;
@@ -65,39 +76,71 @@ async function queryBooksAPI() {
     serverResponse = null;
     startIndex = 0;
   }
-  
+  //setup the REST API call string
+  //Notes:
+  //using the maxResponse parameter and setting it to 40 as per the API documentation
+  //using the startIndex parameter to facilitate 'next set' processing 
+  //(to load the next 40 items from the Response as required)
   var apiUri = `https://www.googleapis.com/books/v1/volumes?q={${searchString}}&maxResults=40&startIndex=${startIndex}`;
   var apiUrl = encodeURI(apiUri);
+
+  //set the 'start' variables to facilitate timing the service response
   var t1 = Date.now();
   var t2;
+  //make the REST call and fetch the response
   const response = await fetch(apiUrl);
   const bookList = await response.json();
+//set the 'end' variables to faciliate timing the service response
   t2 = Date.now();
+
+  //calculate the service response in ms and display the time on the page
   var rt = t2 - t1;
   var serverResponseField = document.getElementById("responseTime");
   serverResponseField.textContent = rt;
-  itemCount = 0;
-  itemCount = bookList.totalItems;
-  var itemCountField = document.getElementById("responseCount");
-  itemCountField.textContent = itemCount;
+
+  //send the REST response the the response handler for further processing
   handleResponse(bookList);
 }
 
+//REST API Response Handler
 function handleResponse(response) {
+  //get the number of items found in the REST call
+  // NOTE: this is the number of items returned to the 'totalItems' field in the 
+  // REST response - not the number of items returned from the API call.
+  // display this number on the page.
+  // DEVELOPER NOTE:
+  // this number seems to change each time a new set of 40 records is retrieved. 
+  // The number being reported here is the number returned in the totalItems parameter - 
+  // something anomalous seems to be happening in the server side processing here as the REST 
+  // query is the same - other than the startIndex parameter.
+  // Further investigation into the server side processing and documentation is required.
+  itemCount = 0;
+  itemCount = response.totalItems;
+  var itemCountField = document.getElementById("responseCount");
+  itemCountField.textContent = itemCount;
+
+  //initialise the table in readiness for displaying the responses
+  //item data
   table = document.querySelector("table");
   theadRow = table.querySelector("thead tr");
   tbody = table.querySelector("tbody");
   navigation = document.querySelector(".navigation");
+
+  //set the number of items to display in the page
   paginationConfig = {
     resultsPerPage: 10,
   };
+
   // set default page start
   table.dataset.recordStart = 0;
   table.dataset.recordEnd = paginationConfig.resultsPerPage - 1;
 
+  //initialise arrays 
   myDataArray = [];
   authorsArray = [];
 
+  //process the authors and 'comma delimit' each one if there is more than
+  //one author per book
   for (var i = 0; i < response.items.length; i++) {
     var item = response.items[i];
     var authors = item.volumeInfo.authors;
@@ -115,6 +158,7 @@ function handleResponse(response) {
       }
     }
 
+    //write the response data for displaying on the page
     myDataArray.push({
       id: item.id,
       authors: authorList,
@@ -122,6 +166,17 @@ function handleResponse(response) {
       description: item.volumeInfo.description,
     });
 
+    //keep track of earliest and latest publication dates fore the retrieved 
+    //records
+    //DEVELOPER NOTE:
+    //currently this processing only works on the actual data returned by the
+    //REST API call - so the data will potentailly update when each subsequent set
+    //of 40 records is retrieved.  Once retrieved the earliest/latest dates will persist
+    //until the search criteria is changed.
+    //This is potentially misleading so a potential future enhancement would be to see if
+    //there was a different REST call available that covered the whole of the REST query...
+    //notwithstanding the potential issue documented above about the variable number of records
+    //returned from the query
     var publishedDate = item.volumeInfo.publishedDate;
     if (publishedDate != undefined) {
       if (publishedDate > latestPublicationDate) {
@@ -139,6 +194,7 @@ function handleResponse(response) {
     }
   }
 
+  //having tracked the earliest/latest publication data, display it on the page
   var earliestDateField = document.getElementById("earliestDate");
   earliestDateField.textContent = earliestPublicationDate;
   var earliestBookField = document.getElementById("earliestBook");
@@ -147,13 +203,19 @@ function handleResponse(response) {
   latestDateField.textContent = latestPublicationDate;
   var latestBookField = document.getElementById("latestBook");
   latestBookField.textContent = latestBook;
+
+  //send the actual publication data to the next function for further processing
   displayDefaultTablePage(myDataArray);
+
+  //track the author with the most number of books in this query
   trackMostCommonAuthor(authorsArray);
 }
 
+//display the publication list in the table on the page
 function displayDefaultTablePage(data) {
   let currentRecordStart = parseInt(table.dataset.recordStart);
   let currentRecordEnd = parseInt(table.dataset.recordEnd);
+  //firstly create the table headers
   if (th == null) {
     let headerLabels = Object.keys(data[0]);
     for (let i = 0; i < headerLabels.length; i++) {
@@ -163,22 +225,30 @@ function displayDefaultTablePage(data) {
     }
   }
 
+  //add the data rows to the table and display them
   let recordsToDisplay = data.slice(currentRecordStart, currentRecordEnd + 1);
   createTbodyCells(recordsToDisplay);
   //hide the columns we don't want to display on the screen
+  // NOTE - 
+  // ID retained but not displayed just in case it was needed for future functions
+  // DESCRIPTION is required in the event of a row click.  Design decision taken to 
+  // store this at this point in order to reduce the need for WAN rountrips and reduce 
+  // WAN latency in the execution of this app.
   hideColumns();
   //add click handlers to the rows to enable displaying the description
   addRowHandlers();
 }
 
-// determine direction and initialize the page change
+// determine scroll direction and initialize the page change
 var waiting = false;
 async function changePage(direction) {
   if (waiting) return;
 
+  //store dataset info
   let currentRecordStart = parseInt(table.dataset.recordStart);
   let currentRecordEnd = parseInt(table.dataset.recordEnd);
 
+  //if next clicked (scrolling down) then display the next set of records
   if (direction === "next") {
     if (currentRecordEnd + 1 > myDataArray.length) {
       return;
@@ -188,6 +258,9 @@ async function changePage(direction) {
 
     table.dataset.recordStart = newStart;
     table.dataset.recordEnd = newEnd;
+
+    //if you've hit the bottom of the previously retrieved dataset, go back to the API
+    //to retrieve the next set of records
     if (newEnd > myDataArray.length) {
       startIndex += 41;
       waiting = true;
@@ -197,7 +270,11 @@ async function changePage(direction) {
     }
     let recordsToDisplay = myDataArray.slice(newStart, newEnd + 1);
 
+    //display the new set of records
     createTbodyCells(recordsToDisplay);
+
+    //if you've hit the top of the previously retrieved dataset, go back to the API
+    //to retrieve the preceding set of records (if there are any)
   } else if (direction === "prev") {
     var newStart;
     var newEnd;
@@ -229,7 +306,7 @@ async function changePage(direction) {
   addRowHandlers();
 }
 
-// add records to DOM
+// display the publication records on the page
 function createTbodyCells(records) {
   tbody.textContent = "";
   for (let i = 0; i < records.length; i++) {
@@ -246,6 +323,7 @@ function createTbodyCells(records) {
   }
 }
 
+//hide the data columns we don't want to display on the screen
 function hideColumns() {
   var rows = document.getElementById("bookTable").rows;
 
@@ -256,6 +334,8 @@ function hideColumns() {
   }
 }
 
+//the event handler function to display the publication description
+//if the user clicks a specific row in the table
 function addRowHandlers() {
   var table = document.getElementById("bookTable");
   var rows = table.getElementsByTagName("tr");
@@ -277,6 +357,10 @@ function addRowHandlers() {
   }
 }
 
+//function to display a pop-up to display the publication description
+//DEVELOPER NOTE:
+//this was my interpretation of how to implement the 'expand' functionality requested
+//in the exercise
 function showDescription(title, description) {
   // Create a custom pop-up to show the book description
   const descriptionBox = document.createElement("div");
@@ -289,6 +373,7 @@ function showDescription(title, description) {
   document.body.appendChild(descriptionBox);
 }
 
+//function to track the author with the most titles in the returned data
 function trackMostCommonAuthor(authorArray) {
   // Initialize variables to track the most frequent item, its frequency, and the current item's frequency
   var mf = 1;
@@ -318,5 +403,6 @@ function trackMostCommonAuthor(authorArray) {
   var mostCommonAuthorCountField = document.getElementById(
     "mostCommonAuthorCount"
   );
+  //display this author on the page
   mostCommonAuthorCountField.textContent = mf;
 }
