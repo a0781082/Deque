@@ -1,58 +1,71 @@
 body {
     background-color: rgb(235, 235, 235);
 }
-th{
+
+th {
     background-color: black;
     color: white;
 }
-td{
+
+td {
     border: 1px solid black;
     padding: .5rem;
 }
-button{
+
+button {
     border: none;
     padding: .5rem;
     background-color: rgb(13, 118, 179);
     color: white;
 }
-.container{
+
+button .hidden_button {
+    display: none;
+}
+
+.container {
     width: fit-content;
     margin: auto;
     text-align: left;
 }
-.navigation{
-   width: fit-content;
-   margin: auto;
+
+.navigation {
+    width: fit-content;
+    margin: auto;
 }
-h1{
+
+h1 {
     color: rgb(0, 0, 0);
 }
+
 .custom-alert {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #fff;
-  border: 1px solid #0208a2;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border: 1px solid #0208a2;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
+
 .bolded {
     font-weight: bold;
 }
-#bookTable { 
-    width: 500px; 
-    text-align: left; 
-    border-collapse: collapse; 
-    color: #2E2E2E; 
-    border: #A4A4A4; 
-} 
 
-#bookTable tr:hover { 
-    background-color: #F2F2F2; 
-} 
+#bookTable {
+    width: 500px;
+    text-align: left;
+    border-collapse: collapse;
+    color: #2E2E2E;
+    border: #A4A4A4;
+}
 
-#bookTable .hidden_row { 
-    display: none; 
-} 
+#bookTable tr:hover {
+    background-color: #F2F2F2;
+}
+
+#bookTable .hidden_row {
+    display: none;
+}

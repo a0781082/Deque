@@ -2,84 +2,81 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="books.css">
-    <title>Deque SE Technical Exercise - Google Books API
-    </title>
+    <title>Deque SE Technical Exercise - Google Books API</title>
 </head>
+
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="books.js"></script>
 
-<body>    
+<body>
     <div class="container">
-
         <div class="headings">
-            <h1>Deque Technical Excercise
-            </h1>
-            <h2>prepared by: Andy Wyatt, May 2024</h2>
+            <header role="banner">
+                <h1>Deque Technical Excercise</h1>
+                <h2>Google Books API Search Page</h2>
+                <h3>prepared by: Andy Wyatt, May 2024</h3>
+            </header>
         </div>
+        <div class=searchFields role="main">
+            <input type="text" id="txtInput" placeholder="Google Books Search String">
+            <button type="button" id="searchButton" onclick="queryBooksAPI();">Please enter your google books search
+                string: </button>
 
-        <div class = searchFields>
-        <input type="text" id="txtInput" placeholder="Google Books Search String">
-        <button type="button" onclick="queryBooksAPI();">Please enter your google books search string: </button>
-        </div>
-
-        <div class="resultMetadata">
-            <p>
-                <span class="label">Number of books found for search: </span>
-                <span class="bolded" id="responseCount"></span>
-            </p>
-            <p>
-                <span class="label">Author found most commonly in these search results: </span>
-                <span class="bolded" id="mostCommonAuthor"></span>
-            </p>
-            </p>
+            <div class="resultMetadata">
+                <p>
+                    <span class="label">Number of books found for search: </span>
+                    <span class="bolded" id="responseCount"></span>
+                </p>
+                <p>
+                    <span class="label">Author found most commonly in these search results: </span>
+                    <span class="bolded" id="mostCommonAuthor"></span>
+                </p>
+                </p>
                 <span class="label">Count of titles in this set for this author: </span>
                 <span class="bolded" id="mostCommonAuthorCount"></span>
-            </p>
-            <p>
-                <span class="label">Earliest publication: </span>
-                <span class="bolded" id="earliestBook"></span>
-            </p>
-            </p>
+                </p>
+                <p>
+                    <span class="label">Earliest publication: </span>
+                    <span class="bolded" id="earliestBook"></span>
+                </p>
+                </p>
                 <span class="label">published: </span>
                 <span class="bolded" id="earliestDate"></span>
-            </p>
-            <p>
-                <span class="label">Latest publication: </span>
-                <span class="bolded" id="latestBook"></span>
-            </p>
-            </p>
+                </p>
+                <p>
+                    <span class="label">Latest publication: </span>
+                    <span class="bolded" id="latestBook"></span>
+                </p>
+                </p>
                 <span class="label">published: </span>
                 <span class="bolded" id="latestDate"></span>
-            </p>
-            <p>
-                 <span class="label">Server Response Time: </span>
-                 <span class="bolded" id="responseTime"></span>
-            </p>
-        </div>
+                </p>
+                <p>
+                    <span class="label">Server Response Time: </span>
+                    <span class="bolded" id="responseTime"></span>
+                </p>
+            </div>
 
-        <div role="table" aria-label="Google Books" aria-describedby="google_books_desc" class="container">
-        </div id="google_books_desc">List of book titles and their authors returned from google books query for the chosen search criteria</div>
-        <table id="bookTable" data-record-start="0" data-record-end="" role="table" class="container">
-            <thead>
-                <tr>
+            <div id="navigation" class="navigation" role="navigation">
+                <button class="hidden_button" id="prev" class="prev">Prev</button>
+                <button class="hidden_button" id="next" class="next">Next</button>
+            </div>
 
-                </tr>
-            </thead>
-            <tbody>
+            <table id="bookTable" data-record-start="0" data-record-end="" role="table" class="container"
+                aria-live="polite">
+                <thead>
+                    <tr>
 
-            </tbody>
-        </table>
-        </div>
+                    </tr>
+                </thead>
+                <tbody>
 
-
-        <div id="navigation" class="navigation" role="navigation">
-            <button id="prev" class="prev">Prev</button>
-            <button id="next" class="next">Next</button>
+                </tbody>
+            </table>
         </div>
     </div>
 </body>

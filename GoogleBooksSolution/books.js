@@ -20,14 +20,26 @@ var theadRow
 var tbody
 var navigation
 var paginationConfig
+var prevButtonElement
+var nextButtonElement
+var searchButtonElement
 
 //run window onload actions:
 //- creat event listeners for the prev and next buttons
 //- create clone of book table so that it is easy to reinitialise table
 //  in the event of a change of search criteria
 window.onload = function () {
-  var prevButtonElement = document.getElementById("prev");
-  var nextButtonElement = document.getElementById("next");
+  searchButtonElement = document.getElementById("searchButton")
+  prevButtonElement = document.getElementById("prev");
+  nextButtonElement = document.getElementById("next");
+
+  //add searchButton mouse hover listeners
+  searchButtonElement.addEventListener('mouseover', () => {
+    searchButtonElement.style.backgroundColor = 'red';
+  })
+  searchButtonElement.addEventListener('mouseout', () => {
+    searchButtonElement.style.backgroundColor = '';
+  })
 
   if (prevButtonElement) {
     prevButtonElement.addEventListener("click", prevClick);
@@ -36,6 +48,9 @@ window.onload = function () {
   if (nextButtonElement) {
     nextButtonElement.addEventListener("click", nextClick);
   }
+  //hide nav buttons on load as they do not make sense without any table data
+  prevButtonElement.style.visibility = "hidden";
+  nextButtonElement.style.visibility = "hidden";
   divClone = $("#bookTable").clone();
 };
 
@@ -56,7 +71,7 @@ async function queryBooksAPI() {
 
   //get the new search criteria from the age
   searchString = document.getElementById("txtInput").value;
-  
+
   //if the search criteria has changed then reinitialise the 
   //working storage to ensure clean execution
   if (searchString != prevSearchString) {
@@ -89,7 +104,7 @@ async function queryBooksAPI() {
   //make the REST call and fetch the response
   const response = await fetch(apiUrl);
   const bookList = await response.json();
-//set the 'end' variables to faciliate timing the service response
+  //set the 'end' variables to faciliate timing the service response
   t2 = Date.now();
 
   //calculate the service response in ms and display the time on the page
@@ -212,6 +227,21 @@ function handleResponse(response) {
 
 //display the publication list in the table on the page
 function displayDefaultTablePage(data) {
+  //unhide navigation buttons and set mouse hover behaviour
+  prevButtonElement.style.visibility = "visible";
+  prevButtonElement.addEventListener('mouseover', () => {
+    prevButtonElement.style.backgroundColor = 'red';
+  })
+  prevButtonElement.addEventListener('mouseout', () => {
+    prevButtonElement.style.backgroundColor = '';
+  })
+  nextButtonElement.style.visibility = "visible";
+  nextButtonElement.addEventListener('mouseover', () => {
+    nextButtonElement.style.backgroundColor = 'red';
+  })
+  nextButtonElement.addEventListener('mouseout', () => {
+    nextButtonElement.style.backgroundColor = '';
+  })
   let currentRecordStart = parseInt(table.dataset.recordStart);
   let currentRecordEnd = parseInt(table.dataset.recordEnd);
   //firstly create the table headers
@@ -319,18 +349,18 @@ function createTbodyCells(records) {
       desc = "This title does not have a description"
     }
 
-    let hiddenRowId = "hidden_row"+(record["id"])
-    
+    let hiddenRowId = "hidden_row" + (record["id"])
+
     tbody.innerHTML += `
-    <tr onclick="showHideRow('${hiddenRowId}');">
+    <tr role="row" onclick="showHideRow('${hiddenRowId}');">
       <td>${id}</td>
       <td>${authors}</td>
       <td>${title}</td>
       <td>${desc}</td>
     </tr>
     `;
-      tbody.innerHTML += `
-      <tr id="${hiddenRowId}" class="hidden_row">
+    tbody.innerHTML += `
+      <tr role="row" id="${hiddenRowId}" class="hidden_row">
         <td colspan=4>
           ${desc}
         </td>
