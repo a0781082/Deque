@@ -41,7 +41,7 @@ h1{
 .bolded {
     font-weight: bold;
 }
-#table_detail { 
+#bookTable { 
     width: 500px; 
     text-align: left; 
     border-collapse: collapse; 
@@ -49,10 +49,10 @@ h1{
     border: #A4A4A4; 
 } 
 
-#table_detail tr:hover { 
+#bookTable tr:hover { 
     background-color: #F2F2F2; 
 } 
 
-#table_detail .hidden_row { 
+#bookTable .hidden_row { 
     display: none; 
 } 

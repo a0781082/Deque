@@ -36,7 +36,6 @@ window.onload = function () {
   if (nextButtonElement) {
     nextButtonElement.addEventListener("click", nextClick);
   }
-
   divClone = $("#bookTable").clone();
 };
 
@@ -235,8 +234,6 @@ function displayDefaultTablePage(data) {
   // store this at this point in order to reduce the need for WAN rountrips and reduce 
   // WAN latency in the execution of this app.
   hideColumns();
-  //add click handlers to the rows to enable displaying the description
-  addRowHandlers();
 }
 
 // determine scroll direction and initialize the page change
@@ -303,23 +300,42 @@ async function changePage(direction) {
   }
   //hide the columns we don't want to display on the screen
   hideColumns();
-  addRowHandlers();
 }
 
 // display the publication records on the page
 function createTbodyCells(records) {
+  //create displayed row containing book author(s) and title
   tbody.textContent = "";
   for (let i = 0; i < records.length; i++) {
     let record = records[i];
-    let tr = document.createElement("tr");
-    for (const key in record) {
-      if (Object.hasOwnProperty.call(record, key)) {
-        let td = document.createElement("td");
-        td.textContent = record[key];
-        tr.append(td);
-      }
+    //let tr = document.createElement("tr");
+    //let hasDesc = Object.hasOwnProperty.call(record, "description")
+
+    let id = record["id"]
+    let authors = record["authors"]
+    let title = record["title"]
+    let desc = record["description"]
+    if (desc == "") {
+      desc = "This title does not have a description"
     }
-    tbody.append(tr);
+
+    let hiddenRowId = "hidden_row"+(record["id"])
+    
+    tbody.innerHTML += `
+    <tr onclick="showHideRow('${hiddenRowId}');">
+      <td>${id}</td>
+      <td>${authors}</td>
+      <td>${title}</td>
+      <td>${desc}</td>
+    </tr>
+    `;
+      tbody.innerHTML += `
+      <tr id="${hiddenRowId}" class="hidden_row">
+        <td colspan=4>
+          ${desc}
+        </td>
+      </tr>  
+      `;
   }
 }
 
@@ -329,31 +345,10 @@ function hideColumns() {
 
   for (var row = 0; row < rows.length; row++) {
     var cols = rows[row].cells;
-    cols[0].style.display = "none";
-    cols[3].style.display = "none";
-  }
-}
-
-//the event handler function to display the publication description
-//if the user clicks a specific row in the table
-function addRowHandlers() {
-  var table = document.getElementById("bookTable");
-  var rows = table.getElementsByTagName("tr");
-  for (var i = 0; i < rows.length; i++) {
-    var currentRow = table.rows[i];
-    var createClickHandler = function (row) {
-      return function () {
-        var descCell = row.getElementsByTagName("td")[3];
-        var desc = descCell.innerHTML;
-        if (desc == "") {
-          desc = "No description found for this title";
-        }
-        var titleCell = row.getElementsByTagName("td")[2];
-        var title = titleCell.innerHTML;
-        showDescription(title, desc);
-      };
-    };
-    currentRow.onclick = createClickHandler(currentRow);
+    if (cols[0] && cols[3]) {
+      cols[0].style.display = "none";
+      cols[3].style.display = "none";
+    }
   }
 }
 
