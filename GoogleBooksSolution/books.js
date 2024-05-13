@@ -406,3 +406,8 @@ function trackMostCommonAuthor(authorArray) {
   //display this author on the page
   mostCommonAuthorCountField.textContent = mf;
 }
+
+//add function to show or hide rows to allow expansion to show the title description...
+function showHideRow(row) {
+  $("#" + row).toggle();
+}

@@ -62,7 +62,9 @@
             </p>
         </div>
 
-        <table id="bookTable" data-record-start="0" data-record-end="">
+        <div role="table" aria-label="Google Books" aria-describedby="google_books_desc" class="container">
+        </div id="google_books_desc">List of book titles and their authors returned from google books query for the chosen search criteria</div>
+        <table id="bookTable" data-record-start="0" data-record-end="" role="table" class="container">
             <thead>
                 <tr>
 
@@ -72,8 +74,10 @@
 
             </tbody>
         </table>
+        </div>
 
-        <div id="navigation" class="navigation">
+
+        <div id="navigation" class="navigation" role="navigation">
             <button id="prev" class="prev">Prev</button>
             <button id="next" class="next">Next</button>
         </div>
