@@ -1,10 +1,20 @@
 body {
-    background-color: rgb(235, 235, 235);
+    background-color: #0693e3;
+    font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.headings {
+    background-color: #0693e3;
+    color: white;
+    padding: 2%;
+    text-align: center;
+    border: 2px solid black;
 }
 
 th {
     background-color: black;
     color: white;
+    text-align: center;
 }
 
 td {
@@ -13,10 +23,16 @@ td {
 }
 
 button {
-    border: none;
+    border: 1px solid black;
     padding: .5rem;
-    background-color: rgb(13, 118, 179);
+    background-color: #00295c;;
     color: white;
+    border-radius: 30px;
+}
+
+button:hover {
+    background-color: white;
+    color: black;
 }
 
 button .hidden_button {
@@ -24,18 +40,27 @@ button .hidden_button {
 }
 
 .container {
-    width: fit-content;
+    border: 2px solid black;
+    padding: .5rem;
+    background-color: rgb(255, 255, 255);
+    width: 620px;
     margin: auto;
     text-align: left;
 }
 
-.navigation {
-    width: fit-content;
-    margin: auto;
+.searchFields {
+    border: 2px solid black;
+    padding: .5rem;
+    background-color: rgb(255, 255, 255);
+    width: 600px;
+    margin: 2px;
+    text-align: left;
 }
 
-h1 {
-    color: rgb(0, 0, 0);
+.navigation {
+    align-items: left;
+    margin: auto;
+    margin: 2px;
 }
 
 .custom-alert {
@@ -55,7 +80,7 @@ h1 {
 }
 
 #bookTable {
-    width: 500px;
+    padding: 5px;
     text-align: left;
     border-collapse: collapse;
     color: #2E2E2E;
@@ -63,9 +88,15 @@ h1 {
 }
 
 #bookTable tr:hover {
-    background-color: #F2F2F2;
+    background-color: #0693e3;
+    color: white;
 }
 
 #bookTable .hidden_row {
     display: none;
+}
+
+spacer {
+    height: 10px;
+    width: 100%;
 }

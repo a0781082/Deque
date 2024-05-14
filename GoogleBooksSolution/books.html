@@ -22,61 +22,66 @@
             </header>
         </div>
         <div class=searchFields role="main">
-            <input type="text" id="txtInput" placeholder="Google Books Search String">
-            <button type="button" id="searchButton" onclick="queryBooksAPI();">Please enter your google books search
-                string: </button>
+            <button class="button" type="button" id="searchButton" onclick="queryBooksAPI();">Please enter your google books search
+                string: 
+            </button>
+            <input type="text" id="txtInput" placeholder="Google Books Search String"></input>
 
             <div class="resultMetadata">
-                <p>
-                    <span class="label">Number of books found for search: </span>
-                    <span class="bolded" id="responseCount"></span>
-                </p>
-                <p>
-                    <span class="label">Author found most commonly in these search results: </span>
-                    <span class="bolded" id="mostCommonAuthor"></span>
-                </p>
-                </p>
-                <span class="label">Count of titles in this set for this author: </span>
-                <span class="bolded" id="mostCommonAuthorCount"></span>
-                </p>
-                <p>
-                    <span class="label">Earliest publication: </span>
-                    <span class="bolded" id="earliestBook"></span>
-                </p>
-                </p>
-                <span class="label">published: </span>
-                <span class="bolded" id="earliestDate"></span>
-                </p>
-                <p>
-                    <span class="label">Latest publication: </span>
-                    <span class="bolded" id="latestBook"></span>
-                </p>
-                </p>
-                <span class="label">published: </span>
-                <span class="bolded" id="latestDate"></span>
-                </p>
-                <p>
-                    <span class="label">Server Response Time: </span>
-                    <span class="bolded" id="responseTime"></span>
-                </p>
-            </div>
-
-            <div id="navigation" class="navigation" role="navigation">
-                <button class="hidden_button" id="prev" class="prev">Prev</button>
-                <button class="hidden_button" id="next" class="next">Next</button>
-            </div>
-
-            <table id="bookTable" data-record-start="0" data-record-end="" role="table" class="container"
-                aria-live="polite">
-                <thead>
+                <table id="resultMetadata">
                     <tr>
-
+                        <td><span class="label">Number of books found for search</span></td>
+                        <td><span class="bolded" id="responseCount"></span></td>
                     </tr>
+                    <tr>
+                        <td><span class="label">Author found most commonly in these search results</span></td>    
+                        <td><span class="bolded" id="mostCommonAuthor"></span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="label">Count of titles in this set for this author</span></td>
+                        <td><span class="bolded" id="mostCommonAuthorCount"></span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="label">Earliest publication</span></td>
+                        <td><span class="bolded" id="earliestBook"></span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="label">Earliest date</span></td>
+                        <td><span class="bolded" id="earliestDate"></span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="label">Latest publication</span></td>
+                        <td><span class="bolded" id="latestBook"></span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="label">Latest date</span></td>
+                        <td><span class="bolded" id="latestDate"></span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="label">Server Response Time</span></td>
+                        <td><span class="bolded" id="responseTime"></span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div id="spacer" class="spacer"></div>
+
+        <div id="searchResults" class="searchFields">
+            <table id="bookTable" data-record-start="0" data-record-end="" role="table" aria-live="polite">
+                <thead>
+                 <tr >
+
+                 </tr>
                 </thead>
                 <tbody>
 
                 </tbody>
             </table>
+            <div id="navigation" class="navigation" role="navigation">
+                <button class="hidden_button" id="prev" class="prev">Prev</button>
+                <button class="hidden_button" id="next" class="next">Next</button>
+            </div>
         </div>
     </div>
 </body>

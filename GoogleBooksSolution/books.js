@@ -33,14 +33,15 @@ window.onload = function () {
   prevButtonElement = document.getElementById("prev");
   nextButtonElement = document.getElementById("next");
 
+  /*
   //add searchButton mouse hover listeners
   searchButtonElement.addEventListener('mouseover', () => {
-    searchButtonElement.style.backgroundColor = 'red';
+    searchButtonElement.style.backgroundColor = 'gainsboro';
   })
   searchButtonElement.addEventListener('mouseout', () => {
     searchButtonElement.style.backgroundColor = '';
   })
-
+*/
   if (prevButtonElement) {
     prevButtonElement.addEventListener("click", prevClick);
   }
@@ -135,7 +136,7 @@ function handleResponse(response) {
 
   //initialise the table in readiness for displaying the responses
   //item data
-  table = document.querySelector("table");
+  table = document.getElementById("bookTable");
   theadRow = table.querySelector("thead tr");
   tbody = table.querySelector("tbody");
   navigation = document.querySelector(".navigation");
@@ -229,19 +230,7 @@ function handleResponse(response) {
 function displayDefaultTablePage(data) {
   //unhide navigation buttons and set mouse hover behaviour
   prevButtonElement.style.visibility = "visible";
-  prevButtonElement.addEventListener('mouseover', () => {
-    prevButtonElement.style.backgroundColor = 'red';
-  })
-  prevButtonElement.addEventListener('mouseout', () => {
-    prevButtonElement.style.backgroundColor = '';
-  })
   nextButtonElement.style.visibility = "visible";
-  nextButtonElement.addEventListener('mouseover', () => {
-    nextButtonElement.style.backgroundColor = 'red';
-  })
-  nextButtonElement.addEventListener('mouseout', () => {
-    nextButtonElement.style.backgroundColor = '';
-  })
   let currentRecordStart = parseInt(table.dataset.recordStart);
   let currentRecordEnd = parseInt(table.dataset.recordEnd);
   //firstly create the table headers
@@ -249,7 +238,7 @@ function displayDefaultTablePage(data) {
     let headerLabels = Object.keys(data[0]);
     for (let i = 0; i < headerLabels.length; i++) {
       th = document.createElement("th");
-      th.textContent = headerLabels[i];
+      th.textContent = headerLabels[i][0].toUpperCase() + headerLabels[i].slice(1);
       theadRow.append(th);
     }
   }
@@ -338,9 +327,6 @@ function createTbodyCells(records) {
   tbody.textContent = "";
   for (let i = 0; i < records.length; i++) {
     let record = records[i];
-    //let tr = document.createElement("tr");
-    //let hasDesc = Object.hasOwnProperty.call(record, "description")
-
     let id = record["id"]
     let authors = record["authors"]
     let title = record["title"]
