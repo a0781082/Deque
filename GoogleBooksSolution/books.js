@@ -14,22 +14,22 @@ var latestBook;
 var serverResponse;
 var startIndex = 0;
 var searchString;
-var prevSearchString
-var table
-var theadRow
-var tbody
-var navigation
-var paginationConfig
-var prevButtonElement
-var nextButtonElement
-var searchButtonElement
+var prevSearchString;
+var table;
+var theadRow;
+var tbody;
+var navigation;
+var paginationConfig;
+var prevButtonElement;
+var nextButtonElement;
+var searchButtonElement;
 
 //run window onload actions:
 //- creat event listeners for the prev and next buttons
 //- create clone of book table so that it is easy to reinitialise table
 //  in the event of a change of search criteria
 window.onload = function () {
-  searchButtonElement = document.getElementById("searchButton")
+  searchButtonElement = document.getElementById("searchButton");
   prevButtonElement = document.getElementById("prev");
   nextButtonElement = document.getElementById("next");
 
@@ -41,11 +41,11 @@ window.onload = function () {
     nextButtonElement.addEventListener("click", nextClick);
   }
   //hide nav buttons on load as they do not make sense without any table data
-  
+
   prevButtonElement.style.visibility = "hidden";
   nextButtonElement.style.visibility = "hidden";
   document.getElementById("searchResults").style.visibility = "hidden";
-  
+
   divClone = $("#bookTable").clone();
 };
 
@@ -67,7 +67,7 @@ async function queryBooksAPI() {
   //get the new search criteria from the age
   searchString = document.getElementById("txtInput").value;
 
-  //if the search criteria has changed then reinitialise the 
+  //if the search criteria has changed then reinitialise the
   //working storage to ensure clean execution
   if (searchString != prevSearchString) {
     // initialise the metadata
@@ -88,7 +88,7 @@ async function queryBooksAPI() {
   //setup the REST API call string
   //Notes:
   //using the maxResponse parameter and setting it to 40 as per the API documentation
-  //using the startIndex parameter to facilitate 'next set' processing 
+  //using the startIndex parameter to facilitate 'next set' processing
   //(to load the next 40 items from the Response as required)
   var apiUri = `https://www.googleapis.com/books/v1/volumes?q={${searchString}}&maxResults=40&startIndex=${startIndex}`;
   var apiUrl = encodeURI(apiUri);
@@ -114,13 +114,13 @@ async function queryBooksAPI() {
 //REST API Response Handler
 function handleResponse(response) {
   //get the number of items found in the REST call
-  // NOTE: this is the number of items returned to the 'totalItems' field in the 
+  // NOTE: this is the number of items returned to the 'totalItems' field in the
   // REST response - not the number of items returned from the API call.
   // display this number on the page.
   // DEVELOPER NOTE:
-  // this number seems to change each time a new set of 40 records is retrieved. 
-  // The number being reported here is the number returned in the totalItems parameter - 
-  // something anomalous seems to be happening in the server side processing here as the REST 
+  // this number seems to change each time a new set of 40 records is retrieved.
+  // The number being reported here is the number returned in the totalItems parameter -
+  // something anomalous seems to be happening in the server side processing here as the REST
   // query is the same - other than the startIndex parameter.
   // Further investigation into the server side processing and documentation is required.
   itemCount = 0;
@@ -144,7 +144,7 @@ function handleResponse(response) {
   table.dataset.recordStart = 0;
   table.dataset.recordEnd = paginationConfig.resultsPerPage - 1;
 
-  //initialise arrays 
+  //initialise arrays
   myDataArray = [];
   authorsArray = [];
 
@@ -175,7 +175,7 @@ function handleResponse(response) {
       description: item.volumeInfo.description,
     });
 
-    //keep track of earliest and latest publication dates fore the retrieved 
+    //keep track of earliest and latest publication dates fore the retrieved
     //records
     //DEVELOPER NOTE:
     //currently this processing only works on the actual data returned by the
@@ -234,7 +234,8 @@ function displayDefaultTablePage(data) {
     let headerLabels = Object.keys(data[0]);
     for (let i = 0; i < headerLabels.length; i++) {
       th = document.createElement("th");
-      th.textContent = headerLabels[i][0].toUpperCase() + headerLabels[i].slice(1);
+      th.textContent =
+        headerLabels[i][0].toUpperCase() + headerLabels[i].slice(1);
       theadRow.append(th);
     }
   }
@@ -243,10 +244,10 @@ function displayDefaultTablePage(data) {
   let recordsToDisplay = data.slice(currentRecordStart, currentRecordEnd + 1);
   createTbodyCells(recordsToDisplay);
   //hide the columns we don't want to display on the screen
-  // NOTE - 
+  // NOTE -
   // ID retained but not displayed just in case it was needed for future functions
-  // DESCRIPTION is required in the event of a row click.  Design decision taken to 
-  // store this at this point in order to reduce the need for WAN rountrips and reduce 
+  // DESCRIPTION is required in the event of a row click.  Design decision taken to
+  // store this at this point in order to reduce the need for WAN rountrips and reduce
   // WAN latency in the execution of this app.
   hideColumns();
 }
@@ -323,15 +324,15 @@ function createTbodyCells(records) {
   tbody.textContent = "";
   for (let i = 0; i < records.length; i++) {
     let record = records[i];
-    let id = record["id"]
-    let authors = record["authors"]
-    let title = record["title"]
-    let desc = record["description"]
+    let id = record["id"];
+    let authors = record["authors"];
+    let title = record["title"];
+    let desc = record["description"];
     if (desc == "") {
-      desc = "This title does not have a description"
+      desc = "This title does not have a description";
     }
 
-    let hiddenRowId = "hidden_row" + (record["id"])
+    let hiddenRowId = "hidden_row" + record["id"];
 
     tbody.innerHTML += `
     <tr role="row" onclick="showHideRow('${hiddenRowId}');">
