@@ -12,78 +12,72 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="books.js"></script>
 
-<body>
-    <div class="container">
-        <div class="headings">
-            <header role="banner">
-                <h1>Deque Technical Excercise</h1>
-                <h2>Google Books API Search Page</h2>
-                <h3>prepared by: Andy Wyatt, May 2024</h3>
-            </header>
-        </div>
-        <div class=searchFields role="main">
-            <button class="button" type="button" id="searchButton" onclick="queryBooksAPI();">Please enter your google books search
-                string: 
-            </button>
-            <input type="text" id="txtInput" placeholder="Google Books Search String"></input>
-
-            <div class="resultMetadata">
-                <table id="resultMetadata">
-                    <tr>
-                        <td><span class="label">Number of books found for search</span></td>
-                        <td><span class="bolded" id="responseCount"></span></td>
-                    </tr>
-                    <tr>
-                        <td><span class="label">Author found most commonly in these search results</span></td>    
-                        <td><span class="bolded" id="mostCommonAuthor"></span></td>
-                    </tr>
-                    <tr>
-                        <td><span class="label">Count of titles in this set for this author</span></td>
-                        <td><span class="bolded" id="mostCommonAuthorCount"></span></td>
-                    </tr>
-                    <tr>
-                        <td><span class="label">Earliest publication</span></td>
-                        <td><span class="bolded" id="earliestBook"></span></td>
-                    </tr>
-                    <tr>
-                        <td><span class="label">Earliest date</span></td>
-                        <td><span class="bolded" id="earliestDate"></span></td>
-                    </tr>
-                    <tr>
-                        <td><span class="label">Latest publication</span></td>
-                        <td><span class="bolded" id="latestBook"></span></td>
-                    </tr>
-                    <tr>
-                        <td><span class="label">Latest date</span></td>
-                        <td><span class="bolded" id="latestDate"></span></td>
-                    </tr>
-                    <tr>
-                        <td><span class="label">Server Response Time</span></td>
-                        <td><span class="bolded" id="responseTime"></span></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-
-        <div id="spacer" class="spacer"></div>
-
-        <div id="searchResults" class="searchFields">
-            <table id="bookTable" data-record-start="0" data-record-end="" role="table" aria-live="polite">
-                <thead>
-                 <tr >
-
-                 </tr>
-                </thead>
-                <tbody>
-
-                </tbody>
-            </table>
-            <div id="navigation" class="navigation" role="navigation">
-                <button class="hidden_button" id="prev" class="prev">Prev</button>
-                <button class="hidden_button" id="next" class="next">Next</button>
-            </div>
-        </div>
+<body class="body">
+    <div class="headings">
+        <header role="banner">
+            <h1>Deque Technical Excercise</h1>
+            <h2>Google Books API Search Page</h2>
+            <h3>prepared by: Andy Wyatt, May 2024</h3>
+        </header>
     </div>
+    <div class=searchFields role="main">
+        <button class="button" type="button" id="searchButton" onclick="queryBooksAPI();">Please enter your google books search
+            string: 
+        </button>
+        <input class="input"  type="text" id="txtInput" placeholder="Google Books Search String"></input>
+    </div>
+    <div class="resultBox">
+        <table id="resultMetadata">
+            <tr>
+                <td><span class="label">Number of books found for search</span></td>
+                <td><span class="bolded" id="responseCount"></span></td>
+            </tr>
+            <tr>
+                <td><span class="label">Author found most commonly in these search results</span></td>    
+                <td><span class="bolded" id="mostCommonAuthor"></span></td>
+            </tr>
+            <tr>
+                <td><span class="label">Count of titles in this set for this author</span></td>
+                <td><span class="bolded" id="mostCommonAuthorCount"></span></td>
+            </tr>
+            <tr>
+                <td><span class="label">Earliest publication</span></td>
+                <td><span class="bolded" id="earliestBook"></span></td>
+            </tr>
+            <tr>
+                <td><span class="label">Earliest date</span></td>
+                <td><span class="bolded" id="earliestDate"></span></td>
+            </tr>
+            <tr>
+                <td><span class="label">Latest publication</span></td>
+                <td><span class="bolded" id="latestBook"></span></td>
+            </tr>
+            <tr>
+                <td><span class="label">Latest date</span></td>
+                <td><span class="bolded" id="latestDate"></span></td>
+            </tr>
+            <tr>
+                <td><span class="label">Server Response Time</span></td>
+                <td><span class="bolded" id="responseTime"></span></td>
+            </tr>
+        </table>
+    </div>
+    <div id="searchResults" class="resultBox">
+        <table id="bookTable" data-record-start="0" data-record-end="" role="table" aria-live="polite">
+            <thead>
+             <tr >
+
+             </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+        <div id="navigation" class="navigation" role="navigation">
+            <button class="button" id="prev">Prev</button>
+            <button class="button" id="next">Next</button>
+        </div>
 </body>
 
 </html>

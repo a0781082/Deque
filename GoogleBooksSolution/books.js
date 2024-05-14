@@ -33,15 +33,6 @@ window.onload = function () {
   prevButtonElement = document.getElementById("prev");
   nextButtonElement = document.getElementById("next");
 
-  /*
-  //add searchButton mouse hover listeners
-  searchButtonElement.addEventListener('mouseover', () => {
-    searchButtonElement.style.backgroundColor = 'gainsboro';
-  })
-  searchButtonElement.addEventListener('mouseout', () => {
-    searchButtonElement.style.backgroundColor = '';
-  })
-*/
   if (prevButtonElement) {
     prevButtonElement.addEventListener("click", prevClick);
   }
@@ -50,8 +41,11 @@ window.onload = function () {
     nextButtonElement.addEventListener("click", nextClick);
   }
   //hide nav buttons on load as they do not make sense without any table data
+  
   prevButtonElement.style.visibility = "hidden";
   nextButtonElement.style.visibility = "hidden";
+  document.getElementById("searchResults").style.visibility = "hidden";
+  
   divClone = $("#bookTable").clone();
 };
 
@@ -111,7 +105,7 @@ async function queryBooksAPI() {
   //calculate the service response in ms and display the time on the page
   var rt = t2 - t1;
   var serverResponseField = document.getElementById("responseTime");
-  serverResponseField.textContent = rt;
+  serverResponseField.textContent = rt + "ms";
 
   //send the REST response the the response handler for further processing
   handleResponse(bookList);
@@ -229,6 +223,8 @@ function handleResponse(response) {
 //display the publication list in the table on the page
 function displayDefaultTablePage(data) {
   //unhide navigation buttons and set mouse hover behaviour
+  var searchResultBox2 = document.getElementById("searchResults");
+  searchResultBox2.style.visibility = "visible";
   prevButtonElement.style.visibility = "visible";
   nextButtonElement.style.visibility = "visible";
   let currentRecordStart = parseInt(table.dataset.recordStart);
