@@ -382,40 +382,48 @@ function showDescription(title, description) {
 }
 
 //function to track the author with the most titles in the returned data
-function trackMostCommonAuthor(authorArray) {
-  // Initialize variables to track the most frequent item, its frequency, and the current item's frequency
-  var mf = 1;
-  var m = 0;
-  var item;
-  // Iterate through the array to find the most frequent item
-  for (var i = 0; i < authorArray.length; i++) {
-    // Nested loop to compare the current item with others in the array
-    for (var j = i; j < authorArray.length; j++) {
-      // Check if the current item matches with another item in the array
-      if (JSON.stringify(authorArray[i]) == JSON.stringify(authorArray[j])) m++;
-      // Update the most frequent item and its frequency if the current item's frequency is higher
-      if (mf < m) {
-        mf = m;
-        item = JSON.stringify(authorArray[i]);
-      }
-    }
-    // Reset the current item's frequency for the next iteration
-    m = 0;
-  }
+function trackMostCommonAuthor(arr) {
 
-  var authorObject = JSON.parse(item);
-  var authorName1 = authorObject.authorName;
-  // Output the most frequent item and its frequency
-  var mostCommonAuthorField = document.getElementById("mostCommonAuthor");
-  mostCommonAuthorField.textContent = authorName1;
-  var mostCommonAuthorCountField = document.getElementById(
-    "mostCommonAuthorCount"
-  );
-  //display this author on the page
-  mostCommonAuthorCountField.textContent = mf;
+//pass array to fn find and count most common author
+const result = findMostFrequentName(arr, "authorName");
+mostCommonAuthor = result.name;
+mostCommonAuthorCount = result.count;
+
+//write the results to the screen
+var mostCommonAuthorField = document.getElementById("mostCommonAuthor");
+var mostCommonAuthorCountField = document.getElementById(
+  "mostCommonAuthorCount");
+mostCommonAuthorField.textContent = mostCommonAuthor;
+mostCommonAuthorCountField.textContent = mostCommonAuthorCount;
+
 }
 
 //add function to show or hide rows to allow expansion to show the title description...
 function showHideRow(row) {
   $("#" + row).toggle();
+}
+
+function findMostFrequentName(arr, key) {
+  if (!Array.isArray(arr) || arr.length === 0 || typeof key !== 'string') {
+    return { name: null, count: 0 };
+  }
+
+  const nameCountMap = new Map();
+  let mostFrequentName = null;
+  let highestCount = 0;
+
+  for (const item of arr) {
+    if (item.hasOwnProperty(key) && typeof item[key] === 'string') {
+      const name = item[key];
+      const currentCount = (nameCountMap.get(name) || 0) + 1;
+      nameCountMap.set(name, currentCount);
+
+      if (currentCount > highestCount) {
+        mostFrequentName = name;
+        highestCount = currentCount;
+      }
+    }
+  }
+
+  return { name: mostFrequentName, count: highestCount };
 }
